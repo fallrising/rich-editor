@@ -3,7 +3,7 @@ import TiptapEditor from './components/TiptapEditor';
 import './App.css';
 
 function App() {
-  const [user, setUser] = useState({ id: 1, name: 'Test User' }); // Simulated user state
+  const [user] = useState({ id: 1, name: 'Test User' }); // Removed setUser
 
   return (
     <div className="App">

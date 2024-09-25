@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Toolbar from './Toolbar';
@@ -21,6 +21,22 @@ const TiptapEditor = ({ user }) => {
     },
   });
 
+  const createNewArticle = useCallback(async () => {
+    const response = await fetch(`${apiUrl}/articles`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: user.id,
+        content: editor?.getHTML() || '<p></p>',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }),
+    });
+    return await response.json();
+  }, [user.id, editor]);
+
   useEffect(() => {
     const loadOrCreateArticle = async () => {
       try {
@@ -32,7 +48,7 @@ const TiptapEditor = ({ user }) => {
             setArticleId(article.id);
             setCreatedAt(article.createdAt);
             setUpdatedAt(article.updatedAt);
-            editor.commands.setContent(article.content);
+            editor?.commands.setContent(article.content);
           } else {
             const newArticle = await createNewArticle();
             setArticleId(newArticle.id);
@@ -48,23 +64,7 @@ const TiptapEditor = ({ user }) => {
     if (user && editor) {
       loadOrCreateArticle();
     }
-  }, [user, editor]);
-
-  const createNewArticle = async () => {
-    const response = await fetch(`${apiUrl}/articles`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userId: user.id,
-        content: editor.getHTML(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }),
-    });
-    return await response.json();
-  };
+  }, [user, editor, createNewArticle]);
 
   const handleSave = async () => {
     if (editor) {
