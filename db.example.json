@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "exampleuser",
+      "password": "examplepassword"
+    }
+  ],
+  "articles": [
+    {
+      "id": "1",
+      "userId": "1",
+      "content": "<p>Example article content.</p>",
+      "createdAt": "2024-09-25T00:00:00.000Z",
+      "updatedAt": "2024-09-25T00:00:00.000Z"
+    }
+  ]
+}
